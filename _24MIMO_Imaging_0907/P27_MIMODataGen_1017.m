@@ -44,8 +44,11 @@ for q = 1:Q
     psi(q) = 2*dv*sin(theta_0)/lambda/R0*v(q);
 %     kv(q) = - cos(A0)*v(q)/(R0+u(q));
 end
+
 figure
-scatter(u,v)
+scatter(targetPos1(:,1),targetPos1(:,2),targetRCS)
+figure
+scatter(u,v,targetRCS.')
 h1 = waitbar(0,'生成数据');
 Rv0 = rangeangle(VantPos,targetIniPos.');
 sigma = rand(1,Q)*0.3;
@@ -76,4 +79,4 @@ for nr = 1:Nr
 end
 delete(h1);
 % RxSig = awgn(RxSig,SNR,'measured');
-save('RxSignal_plane_new.mat');
+save('data\RxSignal_plane_1114.mat');

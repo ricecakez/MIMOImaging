@@ -3,14 +3,20 @@ clear;clc;close all;
 % t = [10 20 30];
 % r = [20 30 40];
 t = [0.1 0.2 0.3];
-r = [0.2 0.3 0.4];
+r = [0.2 0.2 0.4];
 K = 3;
 M = 8;
 N = 8;
 L = 200;
 At = exp(1i*2*pi*(0:M-1).'*t);
 Ar = exp(1i*2*pi*(0:N-1).'*r);
+Phir = diag(exp(1i*2*pi*t));
+A1 = [];
+for n = 1:N
+    A1 = [A1; At*Phir.^(n-1)/K];
+end
 A = kr(Ar,At);
+A1 - A
 B = exp(1i*randn(K,L));
 S = mean(abs(B).^2,2);
 X0 = A*B;
@@ -24,7 +30,8 @@ R3 = zeros(size(SNR));
 f2 = 0:0.01:0.5;
 for nn = 1:length(SNR)
 for mm = 1:MM
-X = awgn(X0,SNR(nn),'measured');
+    X = X0
+% X = awgn(X0,SNR(nn),'measured');
 tic
 [te,re] = RD_MUSIC(X,f2,M,N,K);
 toc

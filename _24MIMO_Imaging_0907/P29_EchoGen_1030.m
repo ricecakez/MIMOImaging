@@ -77,6 +77,6 @@ for nr = 1:Nr
 end
 delete(h1);
 % RxSig = awgn(RxSig,SNR,'measured');
-save('RxSignal_plane_1107.mat');
+save('data\RxSignal_plane_1114.mat');
 % tmp = (dR(:,2:end) - dR(:,1:end-1));%/lambda;
 % tmp1 = (dR1(:,2:end) - dR1(:,1:end-1))/lambda;

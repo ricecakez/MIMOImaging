@@ -9,7 +9,7 @@ dt = 2;
 dr = Nt*dt;
 
 %% waveform parameters
-df = 1e6;
+df = 0.5e6;
 L = 1;
 N0 = 64;
 N = Nt*N0;

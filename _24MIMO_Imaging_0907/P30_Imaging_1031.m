@@ -1,14 +1,15 @@
 clear;clc;close all;
 
-load('RxSignal_plane_1106.mat');
+load('data/RxSignal_plane_1114.mat');
 SNR = 5;
-Echo = awgn(RxSig,SNR,'measured');
+Echo = RxSig/sqrt(N);
+% Echo = awgn(RxSig,SNR,'measured');
 for k = 1:K
     t = T_min + (k-1)*T + (tc:1/fs:(T-1/fs));
     t = t(:);
     for nr = 1:Nr
         y = exp(-1i*2*pi*Fc*t).*Echo((k-1)*N_T+((N_c+1):N_T),nr);
-        tmp = fft(y)./ank(:,k)/N;
+        tmp = fft(y)./ank(:,k)/sqrt(N);
         for nt = 1:Nt
             nv = (nr-1)*Nt+nt;
             Phi0 = exp(1i*2*pi*((nt:Nt:N)-1).'*df*(2*VP(nv)/c-T_min));
@@ -40,13 +41,13 @@ imagesc(x,y,abs(X111))
 % scatter(u,v)
 [phi,psi] = sort2D(phi,psi,1);
 tic
-[phi_est,psi_est] = Unitary_ESPRIT_2D1(Y,N0,Nv,I);
+[phi_est,psi_est,s_est] = Unitary_ESPRIT_2D1(Y,N0,Nv,I);
 toc
 [phi_est,psi_est] = sort2D(phi_est,psi_est,1);
-tic
-[phi_est1,psi_est1] = PM2D(Y,N0,Nv,I);
-toc
-[phi_est1,psi_est1] = sort2D(phi_est1,psi_est1,1);
+% tic
+% [phi_est1,psi_est1] = PM2D(Y,N0,Nv,I);
+% toc
+% [phi_est1,psi_est1] = sort2D(phi_est1,psi_est1,1);
 u_est = phi_est*N0*d0;
 v_est = psi_est*lambda/2*R0/d;
 figure
@@ -55,14 +56,14 @@ x_est = v_est - u_est*u0(1);
 y_est =  (- x_est*u0(1)-u_est)/u0(2);
 figure
 scatter(x_est,y_est);
-u_est1 = phi_est1*N0*d0;
-v_est1 = psi_est1*lambda/2*R0/d;
-figure
-scatter(u_est1,v_est1);
-x_est1 = v_est1 - u_est1*u0(1);
-y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
-figure
-scatter(x_est1,y_est1);
+% u_est1 = phi_est1*N0*d0;
+% v_est1 = psi_est1*lambda/2*R0/d;
+% figure
+% scatter(u_est1,v_est1);
+% x_est1 = v_est1 - u_est1*u0(1);
+% y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
+% figure
+% scatter(x_est1,y_est1);
 
 
 
