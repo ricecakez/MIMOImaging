@@ -1,0 +1,86 @@
+clear;clc;close all;
+
+load('RxSignal_03.mat');
+[ku,ind] = sort(ku.');
+kv = kv(ind).';
+% K = 1;
+% ku = -0.0442;
+% kv = 0.0028;
+% theta = [10 20]*pi/180;
+% phi = [30 40]*pi/180;
+
+% At = exp(1i*2*pi*(-(M-1)/2:(M-1)/2).'*ku);
+% Ar = exp(1i*2*pi*(-(N-1)/2:(N-1)/2).'*kv);
+At = exp(-1i*2*pi*(0:(N0-1)).'*ku.');
+Ar = exp(1i*2*pi*(0:(Nv-1)).'*kv.');
+A = kr(Ar,At);
+% kron(UniMat(N)',UniMat(M)')*A
+% UniMat(M)'*At;
+sigma = rand(1,Q)*0.3;
+S = 12*exp(1i*2*pi*sigma.'*(0:K-1));
+u = ku/Nt/df*c/2;
+v = kv/delta_A*c/Fc/2;
+x = u*cosd(A0(1))+v*sind(A0(1));
+y = u*sind(A0(1))-v*cosd(A0(1));
+figure
+scatter(x,y,12*ones(Q,1),'k','filled')
+xlabel('x_0/m')
+ylabel('y_0/m')
+xlim([-20 20])
+ylim([-20 20])
+M = 20;
+for m = 1:M
+X = awgn(A*S*diag(a),-10,'measured');
+for nn  = 1:size(X,1)
+    X1(nn,:) = xcorr(X(nn,:),a)
+% X = buffer(x,N0*(Nv-1),N0*(Nv-1)-1,'nodelay');
+[ku1,kv1,S1] = Unitary_ESPRIT_2D1(X,N0,Nv,Q);
+[ku1,ind1] = sort(-ku1);
+kv1 = kv1(ind1);
+u1 = ku1/Nt/df*c/2;
+v1 = kv1/delta_A*c/Fc/2;
+x1 = u1*cosd(A0(1))+v1*sind(A0(1));
+y1 = u1*sind(A0(1))-v1*cosd(A0(1));
+figure(2)
+scatter(x1,y1,10*log10(S1),'filled','k')
+hold on
+end
+xlim([-20 20])
+ylim([-20 20])
+% colormap hot
+% plot(x1,y1,'o')
+% hold on
+% % % plot(x_est1,y_est1,'s')
+% plot(x,y,'*')
+% plot(ku,kv,'o',f1,f2,'*')
+% scatter(f1,f2,[],S,'filled')
+% colormap gray
+
+% tic
+% [f1,f2] = Unitary_ESPRIT_2D1(X,M,N,K);
+% toc
+% theta_est = asin(f1)/pi*180;
+% phi_est = asin(f2)/pi*180;
+% tic
+% [f11,f21,S] = Unitary_ESPRIT_2D2(X,M,N,K);
+% [f11 ind] = sort(f11);
+% f21 = f21(ind);
+% toc
+% data = [S f11 f21 ];
+% imagesc(f11,f21,S)
+% A11 = exp(1i*2*pi*(0:(M-1)).'*f11.');
+% A21 = exp(1i*2*pi*(0:(N-1)).'*f21.');
+% A1 = kr(A21,A11);
+% S1 = mean(abs((A1'*A1)\A1'*X),2)
+% [kui,ind1] = sort(ku);
+% [f1i,ind2] = sort(f1);
+% [f11i,ind3] = sort(f11);
+% f1i - kui.'
+% f11i - kui.'
+% 
+% kvi = kv(ind1);
+% f2i = f2(ind2);
+% f21i = f21(ind3);
+
+% theta_est1 = asin(f11)/pi*180;
+% phi_est1 = asin(f21)/pi*180;

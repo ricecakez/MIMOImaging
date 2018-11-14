@@ -1,0 +1,25 @@
+clear;clc;close all;
+
+M = 8;
+K = 3;
+theta = [10 20 30];
+L = 200;
+A = exp(-1i*pi*(0:M-1).'*sin(theta*pi/180));
+S = randn(K,L);
+X = A*S;
+SNR = 0;
+X = awgn(X,SNR,'measured');
+Rxx = X*X';
+Ri = inv(Rxx);
+[V,D] = eig(Rxx);
+[lambda,inds] = sort(diag(D),'descend');
+En = V(:,inds(K+1:end));
+syms z;
+pz = z.^([0:M-1].');
+pz1 = (z^(-1)).^([0:M-1]);
+fz = z.^(M-1)*pz1*En*En'*pz;
+a = sym2poly(fz);
+zx = roots(a);
+rx = zx.';
+[as,ad] = sort(abs(abs(rx)-1));
+DOAest = asin(sort(-angle(rx(ad([1,3,5])))/pi))/pi*180;

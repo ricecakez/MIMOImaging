@@ -1,0 +1,11 @@
+function f = Unitary_ESPRIT_1009(X,d)
+N = size(X,1);
+Y = (UniMat(N))'*X;
+[U,D,V] = svd([real(Y),imag(Y)]);
+Es = U(:,1:d);
+tmp = (UniMat(N-1))'*[zeros(N-1,1) eye(N-1)]*UniMat(N);
+K1 = real(tmp);
+K2 = imag(tmp);
+Psi = pinv(K1*Es)*(K2*Es);
+[T,D] = eig(Psi);
+f = 2*atan(D)/pi;

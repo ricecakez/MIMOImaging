@@ -1,0 +1,30 @@
+function [f1,f2,S] = Unitary_ESPRIT_2D1(X,M,N,K)
+QM = UniMat(M);
+QN = UniMat(N);
+Q = kron(QN',QM');
+Y = Q*X;
+Z = [real(Y) imag(Y)];
+[U,D,V] = svd(Z);
+Es = U(:,1:K);
+tmp1 = UniMat(M-1)'*[zeros(M-1,1) eye(M-1)]*QM;
+K_1 = real(tmp1);
+K_2 = imag(tmp1);
+K_11 = kron(eye(N),K_1);
+K_21 = kron(eye(N),K_2);
+Psi1 = pinv(K_11*Es)*K_21*Es;
+
+tmp2 = UniMat(N-1)'*[zeros(N-1,1) eye(N-1)]*QN;
+K_3 = real(tmp2);
+K_4 = imag(tmp2);
+K_31 = kron(K_3,eye(M));
+K_41 = kron(K_4,eye(M));
+Psi2 = pinv(K_31*Es)*K_41*Es;
+
+[T,D] = eig(Psi1+1i*Psi2);
+f1 = atan(diag(real(D)))/pi;
+f2 = atan(diag(imag(D)))/pi;
+A1 = exp(1i*2*pi*(0:(M-1)).'*f1.');
+A2 = exp(1i*2*pi*(0:(N-1)).'*f2.');
+A = kr(A2,A1);
+S = mean(abs((A'*A)\A'*X),2);
+% S = mean(abs(T\Es'*X),2);
