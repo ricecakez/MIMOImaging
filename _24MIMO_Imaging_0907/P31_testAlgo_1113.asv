@@ -27,7 +27,7 @@ rank(A2)
 A = kr(A2,A1);
 % A*A'
 S = 12*exp(1i*2*pi*rand(I,1)*(0:K-1));
-% P = S*S'/K;
+P = S*S'/K;
 % diag(P)
 X0 =  A*S;
 X = X0;
@@ -52,13 +52,11 @@ S1 = ms(:,3);
 u_est = p1*N0*d0;
 v_est = s1*lambda/2*R0/d;
 figure
-scatter(u_est,v_est,S1,'k','filled');
-grid on
+scatter(u_est,v_est,S1);
 x_est = v_est - u_est*u0(1);
 y_est =  (- x_est*u0(1)-u_est)/u0(2);
 figure
-scatter(x_est+P(1),y_est+P(2),S1,'k','filled');
-grid on
+scatter(x_est,y_est,S1,'k',);
 
 % u_est2 = p2*N0*d0;
 % v_est2 = s2*lambda/2*R0/d;

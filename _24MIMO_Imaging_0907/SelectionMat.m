@@ -1,0 +1,11 @@
+clear;clc;close all;
+M = 64;
+N = 64;
+J2 = kron(eye(N),[zeros(M-1,1), eye(M-1)]);
+J4 = [ zeros((N-1)*M,M),eye((N-1)*M)];
+tmp1 = UniMat((M-1)*N)'*J2*UniMat(M*N);
+K1 = real(tmp1);
+K2 = imag(tmp1);
+tmp2 = UniMat((N-1)*M)'*J4*UniMat(M*N);
+K3 = real(tmp2);
+K4 = imag(tmp2);

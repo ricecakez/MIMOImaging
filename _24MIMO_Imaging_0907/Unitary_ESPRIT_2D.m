@@ -3,10 +3,11 @@ function [f1,f2,S] = Unitary_ESPRIT_2D(X,M,N,K)
 m = P/2;
 X1 = X(1:m,:);
 X2 = X(m+1:end,:);
-T1 = real(X1+IEM(m)*X2);
-T2 = -imag(X1+IEM(m)*X2);
-T3 = imag(X1-IEM(m)*X2);
-T4 = real(X1-IEM(m)*X2);
+X21 = IEM(m)*X2;
+T1 = real(X1+X21);
+T2 = -imag(X1+X21);
+T3 = imag(X1-X21);
+T4 = real(X1-X21);
 Z = [T1 T2
     T3 T4];
 % [V,D] = eig(Z*Z'/2/L);

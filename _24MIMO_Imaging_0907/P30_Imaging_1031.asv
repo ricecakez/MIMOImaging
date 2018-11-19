@@ -1,7 +1,7 @@
 clear;clc;close all;
 
 load('data/RxSignal_plane_1114.mat');
-SNR = 5;
+SNR = 0;
 % Echo = RxSig/sqrt(N);
 Echo = awgn(RxSig/sqrt(N),SNR,'measured');
 for k = 1:K
@@ -20,20 +20,14 @@ for k = 1:K
 end
 
 NFFT = 256;
-% X111 = zeros(NFFT);
-
-% for k = 1:K
-    Y1 = reshape(Y(:,1),[N0,Nv]);
-    tic
+Y1 = reshape(Y(:,1),[N0,Nv]);
 for nv = 1:Nv
-    X11(:,nv) = NFFT*fftshift(ifft(Y1(:,nv),NFFT))/N0;
+    X11(:,nv) = fftshift(ifft(Y1(:,nv),NFFT));
 end
 for nf = 1:NFFT
-    X111(nf,:) = NFFT*fftshift(ifft(X11(nf,:),NFFT))/Nv;
+    X111(nf,:) = fftshift(ifft(X11(nf,:),NFFT));
 end
-toc
-% clear X11;
-% end
+
 u = (-(NFFT/2-1):NFFT/2)/NFFT*N0*d0;
 % theta0 = A0(1)*pi/180;
 % phi0 = A0(2)*pi/180;
@@ -48,64 +42,51 @@ xlabel('$u/{\mathrm{m}}$','Interpreter','latex')
 ylabel('$v/{\mathrm{m}}$','Interpreter','latex')
 colormap('hot')
 
-[m,n,S_1] = find_peak_2D(abs(X111),I);
-u_1 = -u(m);
-v_1 = -v(n);
-x_1 = P(1) + v_1 - u_1*u0(1);
-y_1 =  P(2) + (- (x_1-P(1))*u0(1)-u_1)/u0(2);
-figure
-scatter(x_1,y_1,S_1,'k','s');
-xlabel('$x/{\mathrm{m}}$','Interpreter','latex')
-ylabel('$y/{\mathrm{m}}$','Interpreter','latex')
-grid on
-hold on
+[m,n] = find_peak_2D(abs(X111),I);
+u_1 
 % xlim([-10,15])
 % ylim([-15,10])
 % figure
 % scatter(u,v)
-% [phi,psi] = sort2D(phi,psi,1);
-%  
+[phi,psi] = sort2D(phi,psi,1);
 u1 = phi*N0*d0;
 v1 = psi*lambda/2*R0/d;
-% figure(2)
-% scatter(u1,v1,12)
-
-load('data\selMat6464.mat')
-% hold on
+figure(2)
+scatter(u1,v1,12)
+hold on
 tic
-[phi_est,psi_est,s_est] = U_ESPRIT2D(Y,N0,Nv,I,K1,K2,K3,K4);
+[phi_est,psi_est,s_est] = Unitary_ESPRIT_2D1115(Y,N0,Nv,I);
 toc
 ms = sort_matrix([phi_est psi_est s_est],'ascend',1);
 p1 = ms(:,1);
 s1 = ms(:,2);
 S1 = ms(:,3);
 
-% tic
-% [phi_est1,psi_est1,s_est1] = Unitary_ESPRIT_2D(Y,N0,Nv,I);
-% toc
-% ms = sort_matrix([phi_est1 psi_est1 s_est1],'ascend',1);
-% p2 = ms(:,1);
-% s2 = ms(:,2);
-% S2 = ms(:,3);
+tic
+[phi_est1,psi_est1,s_est1] = Unitary_ESPRIT_2D(Y,N0,Nv,I);
+toc
+ms = sort_matrix([phi_est1 psi_est1 s_est1],'ascend',1);
+p2 = ms(:,1);
+s2 = ms(:,2);
+S2 = ms(:,3);
 u_est = p1*N0*d0;
 v_est = s1*lambda/2*R0/d;
-figure(3)
+figure(2)
 scatter(u_est,v_est,S1,'r');
-hold on
 x_est = v_est - u_est*u0(1);
 y_est =  (- x_est*u0(1)-u_est)/u0(2);
-figure(2)
-scatter(x_est+P(1),y_est+P(2),S1,'b+');
+figure(3)
+scatter(x_est,y_est,S1,'r');
 hold on
-% u_est1 = p2*N0*d0;
-% v_est1 = s2*lambda/2*R0/d;
-% figure(3)
-% scatter(u_est1,v_est1,S2,'k');
-% x_est1 = v_est1 - u_est1*u0(1);
-% y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
+u_est1 = p2*N0*d0;
+v_est1 = s2*lambda/2*R0/d;
 figure(2)
-% scatter(x_est1+P(1),y_est1+P(2),S2,'k+');
-scatter(a(1,:)+P(1),a(2,:)+P(2),12,'r')
+scatter(u_est1,v_est1,S2,'k');
+x_est1 = v_est1 - u_est1*u0(1);
+y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
+figure(3)
+scatter(x_est1,y_est1,S2,'k');
+scatter(a(1,:),a(2,:),12,'b')
 
 
 

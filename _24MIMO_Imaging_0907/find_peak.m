@@ -1,4 +1,4 @@
-function inds = find_peak(f,K)
+function [inds,f] = find_peak(f,K)
 for k = 1:K
     inds(k) = find(f == max(f),1);
     m = inds(k);

@@ -26,5 +26,5 @@ f2 = atan(diag(imag(D)))/pi;
 A1 = exp(1i*2*pi*(0:(M-1)).'*f1.');
 A2 = exp(1i*2*pi*(0:(N-1)).'*f2.');
 A = kr(A2,A1);
-S = mean(abs((A'*A)\A'*X),2);
+S = sqrt(abs(diag((A'*A)\A'*(X*X')*A/(A'*A)))/size(X,2));
 % S = mean(abs(T\Es'*X),2);
