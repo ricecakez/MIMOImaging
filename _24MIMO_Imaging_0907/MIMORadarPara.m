@@ -1,4 +1,4 @@
-function [Fc,Bw,fs,N,K,df,tb,tc,T,PRF,Nt,Nr,dt,dr] = MIMORadarPara
+function [Fc,lambda,Bw,fs,N,K,df,tb,tc,T,PRF,Nt,Nr,dt,dr] = MIMORadarPara
 %% antenna parameters (colocated ULA)
 Fc = 10e9;
 c = 3e8;
@@ -9,7 +9,7 @@ dt = 2;
 dr = Nt*dt;
 
 %% waveform parameters
-df = 0.5e6;
+df = 1e6;
 L = 1;
 N0 = 64;
 N = Nt*N0;

@@ -1,9 +1,9 @@
 clear;clc;close all;
 
-load('data/RxSignal_plane_1114.mat');
-SNR = 5;
-% Echo = RxSig/sqrt(N);
-Echo = awgn(RxSig/sqrt(N),SNR,'measured');
+load('data/RxSignal_plane_1106.mat');
+% SNR = 0;
+Echo = RxSig/sqrt(N);
+% Echo = awgn(RxSig/sqrt(N),SNR,'measured');
 for k = 1:K
     t = T_min + (k-1)*T + (tc:1/fs:(T-1/fs));
     t = t(:);
@@ -63,48 +63,49 @@ hold on
 % ylim([-15,10])
 % figure
 % scatter(u,v)
-% [phi,psi] = sort2D(phi,psi,1);
+[phi,psi] = sort2D(phi,psi,1);
 %  
 u1 = phi*N0*d0;
 v1 = psi*lambda/2*R0/d;
-% figure(2)
-% scatter(u1,v1,12)
-
+figure(3)
+scatter(u1,v1,12,'r')
+hold on
 load('data\selMat6464.mat')
 % hold on
 tic
-[phi_est,psi_est,s_est] = U_ESPRIT2D(Y,N0,Nv,I,K1,K2,K3,K4);
+[phi_est,psi_est] = StepUESPRIT(Y,Nv,N0,Nt,I);
+% [phi_est,psi_est,s_est] = Unitary_ESPRIT_2D1(Y,N0,Nv,I);
 toc
-ms = sort_matrix([phi_est psi_est s_est],'ascend',1);
+ms = sort_matrix([phi_est psi_est],'ascend',1);
 p1 = ms(:,1);
 s1 = ms(:,2);
-S1 = ms(:,3);
+% S1 = ms(:,3);
 
-% tic
-% [phi_est1,psi_est1,s_est1] = Unitary_ESPRIT_2D(Y,N0,Nv,I);
-% toc
-% ms = sort_matrix([phi_est1 psi_est1 s_est1],'ascend',1);
-% p2 = ms(:,1);
-% s2 = ms(:,2);
-% S2 = ms(:,3);
+tic
+[phi_est1,psi_est1,s_est1] = Unitary_ESPRIT_2D1115(Y,N0,Nv,I);
+toc
+ms = sort_matrix([phi_est1 psi_est1 s_est1],'ascend',1);
+p2 = ms(:,1);
+s2 = ms(:,2);
+S2 = ms(:,3);
 u_est = p1*N0*d0;
 v_est = s1*lambda/2*R0/d;
 figure(3)
-scatter(u_est,v_est,S1,'r');
+scatter(u_est,v_est,12,'b+');
 hold on
 x_est = v_est - u_est*u0(1);
 y_est =  (- x_est*u0(1)-u_est)/u0(2);
-figure(2)
-scatter(x_est+P(1),y_est+P(2),S1,'b+');
+figure(4)
+scatter(x_est+P(1),y_est+P(2),12,'b+');
 hold on
-% u_est1 = p2*N0*d0;
-% v_est1 = s2*lambda/2*R0/d;
-% figure(3)
-% scatter(u_est1,v_est1,S2,'k');
-% x_est1 = v_est1 - u_est1*u0(1);
-% y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
-figure(2)
-% scatter(x_est1+P(1),y_est1+P(2),S2,'k+');
+u_est1 = p2*N0*d0;
+v_est1 = s2*lambda/2*R0/d;
+figure(3)
+scatter(u_est1,v_est1,S2,'ks');
+x_est1 = v_est1 - u_est1*u0(1);
+y_est1 =  (- x_est1*u0(1)-u_est1)/u0(2);
+figure(4)
+scatter(x_est1+P(1),y_est1+P(2),S2,'ks');
 scatter(a(1,:)+P(1),a(2,:)+P(2),12,'r')
 
 

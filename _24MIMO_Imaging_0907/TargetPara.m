@@ -1,6 +1,9 @@
-function [targetRCS,targetPos,targetVel,targetIniPos] = TargetPara
+function [targetRCS,targetPos,targetVel,targetIniPos,I] = TargetPara
 [target, N_target] = Target;
-targetIniPos = [3000 4000 1000];
-targetRCS = target(:,1);
+targetIniPos = [6000 8000 4000];
+theta = 30;
+target(:,2:3) = target(:,2:3)*[cosd(theta) -sind(theta);sind(theta) cosd(theta)]*0.75;
+I = size(target,1);
+targetRCS = 6 + 6.*rand(I,1);
 targetPos = [target(:,2:3) zeros(N_target,1)] + ones(N_target,1)*targetIniPos;
 targetVel = zeros(size(targetPos));

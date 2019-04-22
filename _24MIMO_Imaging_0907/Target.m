@@ -1,5 +1,5 @@
 function [target,N_target] = Target
-fid=fopen('Target_1.txt');
+fid=fopen('Target_plane1.txt');
 target = zeros(1,3);
 i = 0;
 while ~feof(fid)

@@ -1,0 +1,23 @@
+function [f1,f2,S] = Succ_ESPRIT(X,N0,Nt,Nr,R)
+    [Es,~,~] = svds(X,R);
+    Nv = Nt*Nr;
+    J1 = kron(eye(Nv),[eye(N0-1) zeros(N0-1,1)]);
+    J2 = kron(eye(Nv),[zeros(N0-1,1) eye(N0-1)]);
+    [T,Phi1] = eig((J1*(Es))\(J2*(Es)));
+    f1 = angle(diag(Phi1))/2/pi/Nt;
+%     [f1,inds] = sort(f10);
+%     T = T(:,inds);
+    A_ = Es*T;
+    Phi10 = kr(ones(Nr,R),kr(exp(-1i*2*pi*(0:Nt-1).'*f1.'),exp(-1i*2*pi*(0:N0-1).'*f1.'*Nt)));
+    A2_ = Phi10.*A_;
+    J3 = kron([eye(Nv-1) zeros(Nv-1,1)],eye(N0));
+    J4 = kron([zeros(Nv-1,1) eye(Nv-1)],eye(N0));
+    Phi2 = (J3*A2_)\(J4*A2_);
+    f2 = angle(diag(Phi2))/2/pi;
+    A1 = exp(1i*2*pi*(0:N0-1).'*f1.'*Nt);
+    A2 = exp(1i*2*pi*(0:Nt-1).'*(f1+f2).');
+    A3 = exp(1i*2*pi*(0:Nr-1).'*f2.'*Nt);
+    A = krb(A3,krb(A2,A1));
+%     Rx = X*X'/size(X,2);
+    S = mean(abs(A\X),2);
+end

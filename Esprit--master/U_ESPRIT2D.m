@@ -14,7 +14,7 @@ if mod(M*N,2) == 0
         imag(Y1-Y21) real(Y1-Y21)];
 else
     Z = [real(Y1+Y21) -imag(Y1+Y21);
-        sqrt(2)*real(y) -sqrt(2)*image(y);
+        sqrt(2)*real(y) -sqrt(2)*imag(y);
         imag(Y1-Y21) real(Y1-Y21)];
 end
 [U,D,V] = svd(Z);

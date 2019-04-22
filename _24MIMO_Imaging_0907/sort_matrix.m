@@ -1,4 +1,4 @@
-function ms = sort_matrix(m,method,dim)
+function [ms,inds] = sort_matrix(m,method,dim)
 ms = zeros(size(m));
 if dim == 1
     N = size(m,2); 
